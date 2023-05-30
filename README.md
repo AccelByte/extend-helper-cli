@@ -12,7 +12,7 @@ Download the cli program from latest GitHub release page https://github.com/Acce
 
 ### Setup Account
 
-To use CLI you need AccelByte IAM Client and AccelByte Account (with permission `NAMESPACE:{namespace}:UPLOADHELPER` (READ)).
+To use CLI you need AccelByte IAM Client and AccelByte Account (with permission `NAMESPACE:{namespace}:EXTENDHELPER` (READ)).
 
 Before running the program please set these environment variables that will be required
 at runtime:
@@ -40,12 +40,15 @@ at runtime:
 Example set envars:
 
 ```shell
-export AB_CLIENT_ID=accelbyte-iam-client-id
-export AB_CLIENT_SECRET=accelbyte-iam-client-secret
-export AB_USERNAME=accelbyte-username-or-email
-export AB_PASSWORD=accelbyte-account-password
-export AB_BASE_URL=https://development.accelbyte.io
+AB_CLIENT_ID=accelbyte-iam-client-id
+AB_CLIENT_SECRET=accelbyte-iam-client-secret
+AB_USERNAME=accelbyte-username-or-email
+AB_PASSWORD=accelbyte-account-password
+AB_BASE_URL=https://development.accelbyte.io
 ```
+
+Those variables can be exported in current terminal or saved as `.env` file 
+in current directory where the command will be run
 
 ### Getting Docker Credentials
 
@@ -55,7 +58,7 @@ the repository url is obtained from extend app details page when creating the ap
 
 ```shell
 # using option -p to print only password and pipe it to docker login
-extend-helper-cli dockerlogin --game my-game --app chatfilter01 -p | docker login -u AWS --password-stdin 342674635073.dkr.ecr.us-west-2.amazonaws.com
+extend-helper-cli dockerlogin --namespace my-game --app chatfilter01 -p | docker login -u AWS --password-stdin 342674635073.dkr.ecr.us-west-2.amazonaws.com
 ```
 
 or, get docker credentials and print on terminal to be used later.
@@ -63,7 +66,7 @@ or, get docker credentials and print on terminal to be used later.
 ```shell
 # get docker login credentials, if successful will printout json containing
 # docker username, password, repository url
-extend-helper-cli dockerlogin --game my-game --app chatfilter01
+extend-helper-cli dockerlogin --namespace my-game --app chatfilter01
 ```
 
 ### Push Image
