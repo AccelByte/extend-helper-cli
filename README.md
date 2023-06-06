@@ -12,7 +12,7 @@ Download the cli program from latest GitHub release page https://github.com/Acce
 
 ### Setup Account
 
-To use CLI you need AccelByte IAM Client and AccelByte Account (with permission `NAMESPACE:{namespace}:EXTENDHELPER` (READ)).
+To use CLI you need AccelByte IAM Client and AccelByte Account (with permission `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` (READ)).
 
 Before running the program please set these environment variables that will be required
 at runtime:
