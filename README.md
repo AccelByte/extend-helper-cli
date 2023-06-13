@@ -12,11 +12,11 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
 
 1.  Access to `AccelByte Gaming Services` environment. Keep the `Base URL` e.g. for demo environment, it is https://demo.accelbyte.io.
 
-2. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permissions. Keep the `Client ID` and `Client Secret`.
+2. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type. Keep the `Client ID` and `Client Secret`.
 
-   - ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS [READ]
+3. Create a user if you don't have any with the following permission. Keep the `Username` and `Password`. 
 
-3. Create a user. Keep the `Username` and `Password`. 
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
 
 4. Docker.
 
