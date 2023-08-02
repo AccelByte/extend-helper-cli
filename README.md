@@ -40,19 +40,42 @@ OR
 Save the required variables in an `.env` file in the directory where this command line app will be executed.
 
 ```
-AB_BASE_URL=https://xxxxxxxxxx
-AB_CLIENT_ID=xxxxxxxxxx             
-AB_CLIENT_SECRET=xxxxxxxxxx             
-AB_USERNAME=xxxxxxxxxx              
-AB_PASSWORD=xxxxxxxxxx
+AB_BASE_URL='https://xxxxxxxxxx'
+AB_CLIENT_ID='xxxxxxxxxx'             
+AB_CLIENT_SECRET='xxxxxxxxxx'             
+AB_USERNAME='xxxxxxxxxx'              
+AB_PASSWORD='xxxxxxxxxx'
 ```
 
 ## Usage
 
 ### Getting Credentials for Pushing Extend App Images
 
-To get credentials for pushing Extend App image to AccelByte Extend container registry,
-use the following command. Note that the username is always `AWS` and the repository URL
+This command will get credentials for pushing Extend App Container image to AccelByte Extend container registry.
+
+The credentials can be use only for specified game namespace and extend app name, you need to re-login for other apps.
+
+Recommended way using `--login` flag to automatically run docker login
+
+```shell
+extend-helper-cli dockerlogin --namespace my-game --app chatfilter01 --login
+```
+
+After docker login successfully you can now push extend app container image
+
+> Note: after this step you can immediately proceed to `Push Container Image` section
+
+OR
+
+Notice the `--login` flag omitted, that way will only print out docker credentials as json
+
+```shell
+extend-helper-cli dockerlogin --namespace my-game --app chatfilter01
+```
+
+OR
+
+You can manually docker login by specifying `-p` flag to output only password and pipe it to docker command. The username is always `AWS` and the repository URL
 is obtained from the Admin Portal after creating the Extend App. In the following example, 
 the Extend App name created is `chatfilter01` and the repository URL is `342674635073.dkr.ecr.us-west-2.amazonaws.com`.
 
@@ -61,18 +84,10 @@ the Extend App name created is `chatfilter01` and the repository URL is `3426746
 extend-helper-cli dockerlogin --namespace my-game --app chatfilter01 -p | docker login -u AWS --password-stdin 342674635073.dkr.ecr.us-west-2.amazonaws.com
 ```
 
-OR
+### Push Container Image
 
-Get the credentials in JSON format to be used with `docker login` later.
-
-```shell
-# Print out a JSON containing docker username, password, and repository URL
-extend-helper-cli dockerlogin --namespace my-game --app chatfilter01
-```
-
-After `docker login` is successful, you can build your Extend App and tag the image
-according to the repository URL. Continuing from the above example, for `chatfilter01`,
-it will be `342674635073.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/my-game/chatfilter01`.
+After `docker login` is successful, you can build the Extend App, tag the image
+according to the repository URL, and push it.
 
 ```shell
 # Build new image
