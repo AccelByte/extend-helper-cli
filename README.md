@@ -95,3 +95,19 @@ docker build -t 342674635073.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/d
 # Push the image
 docker push 342674635073.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/my-game/chatfilter01:v1.0.0
 ```
+
+## Troubleshooting
+
+### docker login: error storing credentials `The stub received bad data.`
+
+This issue has something to do with the token size being larger than most credential managers can handle. Likely, you will encounter this in Windows OS.
+
+```text
+Error saving credentials: error storing credentials - err: exit status 1, out: `error storing credentials - err: exit status 1, out: `The stub received bad data.`
+```
+Possible workaround:
+```text
+# remove all
+C:\Program Files\Docker\Docker\resources\bin\docker-credential-*.exe
+```
+For more [discussion here](https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data).
