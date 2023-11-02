@@ -12,13 +12,15 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
 
 1.  Access to `AccelByte Gaming Services` environment. Keep the `Base URL` e.g. for demo environment, it is https://demo.accelbyte.io.
 
-2. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type. Keep the `Client ID` and `Client Secret`.
-
-3. Create a user if you don't have any with the following permission. Keep the `Username` and `Password`. 
+2. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.
 
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
 
-4. Docker.
+   If you use extend-helper-cli v0.0.3 or lower, create a user if you don't have any with the following permission. Keep the Username and Password.
+
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
+
+3. Docker.
 
 ## Setup
 
@@ -30,7 +32,7 @@ export AB_BASE_URL='https://xxxxxxxxxx'
 # Use Client ID and Client Secret from the Prerequisites section
 export AB_CLIENT_ID='xxxxxxxxxx'               
 export AB_CLIENT_SECRET='xxxxxxxxxx'              
-# Use Username and Password from the Prerequisites section
+# (This is for extend-helper-cli v0.0.3 or lower) Use Username and Password from the Prerequisites section
 export AB_USERNAME='xxxxxxxxxx'               
 export AB_PASSWORD='xxxxxxxxxx'
 ```
@@ -42,9 +44,7 @@ Save the required variables in an `.env` file in the directory where this comman
 ```
 AB_BASE_URL='https://xxxxxxxxxx'
 AB_CLIENT_ID='xxxxxxxxxx'             
-AB_CLIENT_SECRET='xxxxxxxxxx'             
-AB_USERNAME='xxxxxxxxxx'              
-AB_PASSWORD='xxxxxxxxxx'
+AB_CLIENT_SECRET='xxxxxxxxxx'
 ```
 
 ## Usage
