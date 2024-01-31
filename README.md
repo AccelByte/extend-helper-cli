@@ -4,6 +4,8 @@
 
 A helper command line app for supporting AccelByte Extend use cases.
 
+**This repository is intended for binary release only.**
+
 ## Download
 
 Latest builds can be downloaded from [releases](https://github.com/AccelByte/extend-helper-cli/releases) page.
