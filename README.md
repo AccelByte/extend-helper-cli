@@ -71,10 +71,10 @@ tag the image according to the repository URL, and push it. For example:
 
 ```shell
 # Build new image
-docker build -t 342674635073.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0 .
+docker build -t xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0 .
 
 # Push the image
-docker push 342674635073.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0
+docker push xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0
 ```
 
 ## Troubleshooting
