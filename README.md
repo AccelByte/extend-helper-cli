@@ -12,7 +12,19 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
 
 ## Prerequisites
 
-1. Docker v23.x
+1. Docker (Docker Engine v23.0+)
+
+   ```
+   docker version
+
+   ...
+   Server: Docker Desktop
+      Engine:
+      Version:          24.0.5
+   ...
+   ```
+
+   :exclamation: **In Linux, you need to be able to run Docker commands without root.** Add your user to `docker` group: `sudo usermod -aG docker $USER`.
 
 2.  Access to `AccelByte Gaming Services` environment. Keep the `Base URL` e.g. https://test.accelbyte.io.
 
@@ -70,6 +82,25 @@ After `dockerlogin` command successfully, you can build your `Extend App`,
 tag the image according to the repository URL, and push it. For example:
 
 ```shell
+# Builds and pushes the image
+extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-app>
+    --image-tag v1.0.0
+    --work-dir <path-to-directory-containing-service-dockerfile>
+```
+
+> :bulb: You can also use the `--login` flag to execute `dockerlogin` beforehand.
+
+```shell
+# Uses `dockerlogin --namespace <my-game-namespace> --app <my-extend-app> --login` and then; builds and pushes the image
+extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-app>
+    --image-tag v1.0.0
+    --work-dir <path-to-directory-containing-service-dockerfile>
+    --login
+```
+
+or you could build and push it manually:
+
+```shell
 # Build new image
 docker build -t xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0 .
 
@@ -77,18 +108,63 @@ docker build -t xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/d
 docker push xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0
 ```
 
+### Getting App Info
+
+```shell
+extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app>
+```
+
+```text
+{
+  "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "appName": "<my-extend-app>",
+  "appRepoArn": "arn:aws:ecr:xxxxxxxxx:xxxxxxxxxxxx:xxxx/xxxx/xxxx/xxxx/xxxx/xxx-xxxx-xxxx/xxxx",
+  "appRepoUrl": "xxxx.xxxx.xxxx.xxxxxxxxx.xxxx.xxxx/xxxx/xxxx/xxxx/xxxx/xxx-xxxx-xxxx/xxxx",
+  "appStatus": "app-undeployed",
+  "app_release_status": "U",
+  "basePath": "xxx-xxxx-xxxx",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "scenario": "service-extension",
+  "updatedAt": "2024-01-31T00:00:00.000Z"
+}
+```
+
+If you want to only query a specific field use `--path` and pass in a valid [JSON pointer](https://datatracker.ietf.org/doc/html/rfc6901).
+
+```shell
+extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appName
+```
+
+```text
+<my-extend-app>
+```
+
+---
+
+```shell
+extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appRepoUrl
+```
+
+```text
+xxxx.xxxx.xxxx.xxxxxxxxx.xxxx.xxxx/xxxx/xxxx/xxxx/xxxx/xxx-xxxx-xxxx/xxxx
+```
+
 ## Troubleshooting
 
 ### docker login: error storing credentials `The stub received bad data.`
 
-This issue has something to do with the token size being larger than most credential managers can handle. Likely, you will encounter this in Windows OS.
+When pushing an Extend app container image to AGS, `extend-helper-cli dockerlogin ...` command returns the following error.
 
 ```
 Error saving credentials: error storing credentials - err: exit status 1, out: `error storing credentials - err: exit status 1, out: `The stub received bad data.`
 ```
-Possible workaround:
-```
-# Remove all
-C:\Program Files\Docker\Docker\resources\bin\docker-credential-*.exe
-```
-More [discussions here](https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data).
+
+This issue has something to do with the token size being larger than most credential managers can handle.
+
+Depending on your operating system, a possible workaround is to delete either `"credsStore": "desktop"` or `"credsStore": "desktop.exe"` from your Docker `config.json`.
+
+    - Linux or WSL2: $HOME/.docker\config.json
+    - Windows: %USERPROFILE%\.docker\config.json
+
+
+More disscussions [here](https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data).
