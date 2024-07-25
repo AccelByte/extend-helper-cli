@@ -2,7 +2,7 @@
 
 ## Overview
 
-A helper command line app for supporting `AccelByte Gaming Services` Extend use cases.
+A command line app for supporting AccelByte Gaming Services (AGS) Extend use cases.
 
 :exclamation: **This repository contains binary release only.**
 
@@ -10,51 +10,71 @@ A helper command line app for supporting `AccelByte Gaming Services` Extend use 
 
 Latest builds can be downloaded from [releases](https://github.com/AccelByte/extend-helper-cli/releases) page.
 
+> :warning: **We recommend to always use the latest version available:** For new projects, please avoid using
+v0.0.3 and below.
+
 ## Prerequisites
 
-1. Docker (Docker Engine v23.0+)
+1. Docker (Docker Desktop 4.30+/Docker Engine v23.0+)
+   
+      - On Linux Ubuntu:
 
-   ```
-   docker version
+         1. To install from the Ubuntu repository, run `sudo apt update && sudo apt install docker.io docker-buildx docker-compose-v2`.
+         2. Add your user to the `docker` group: `sudo usermod -aG docker $USER`.
+         3. Log out and log back in to allow the changes to take effect.
 
-   ...
-   Server: Docker Desktop
-      Engine:
-      Version:          24.0.5
-   ...
-   ```
+      - On Windows or macOS:
 
-   :exclamation: **In Linux, you need to be able to run Docker commands without root.** Add your user to `docker` group: `sudo usermod -aG docker $USER`.
+         Follow Docker's documentation on installing the Docker Desktop on [Windows](https://docs.docker.com/desktop/install/windows-install/) or [macOS](https://docs.docker.com/desktop/install/mac-install/).
 
-2.  Access to `AccelByte Gaming Services` environment. Keep the `Base URL` e.g. https://test.accelbyte.io.
+         ```
+         docker version
+
+         ...
+         Server: Docker Desktop
+            Engine:
+            Version:          24.0.5
+
+2.  Access to AGS environment. Keep the `Base URL`.
+
+    - Example for AGS Starter: `https://spaceshooter.prod.gamingservices.accelbyte.io`
+    - Example for AGS Premium: `https://dev.customer.accelbyte.io`
 
 3. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.
 
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
 
-   **For extend-helper-cli <= v0.0.3 only**: Create a user if you don't have any with the following permission. Keep the Username and Password.
-
-   - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
-
 ## Setup
 
-Set the required environment variables by this command line app.
+Set the variables required by this command line app.
+
+### Option 1: using environment variables
+
+Execute the following commands depending on your operating system.
+
+For Linux, Windows (WSL2), and macOS:
 
 ```shell
-# Base URL of AccelByte Gaming Services e.g. https://demo.accelbyte.io
+# Base URL of AccelByte Gaming Services e.g. https://test.accelbyte.io
 export AB_BASE_URL='https://xxxxxxxxxx'
 # Use Client ID and Client Secret from the Prerequisites section
-export AB_CLIENT_ID='xxxxxxxxxx'               
-export AB_CLIENT_SECRET='xxxxxxxxxx' 
-
-# For extend-helper-cli <= v0.0.3 only: use Username and Password from the Prerequisites section
-export AB_USERNAME='xxxxxxxxxx'               
-export AB_PASSWORD='xxxxxxxxxx'
+export AB_CLIENT_ID='xxxxxxxxxx'
+export AB_CLIENT_SECRET='xxxxxxxxxx'
 ```
 
-OR
+For Windows (Command Prompt):
 
-Save the required variables in an `.env` file in the directory where this command line app will be executed.
+```bat
+rem Base URL of AccelByte Gaming Services e.g. https://test.accelbyte.io
+set AB_BASE_URL=https://xxxxxxxxxx
+rem Use Client ID and Client Secret from the Prerequisites section
+set AB_CLIENT_ID=xxxxxxxxxx  
+set AB_CLIENT_SECRET=xxxxxxxxxx
+```
+
+### Option 2: using .env file
+
+Put the variables in a `.env` file in the directory where this command line app will be executed.
 
 ```
 AB_BASE_URL='https://xxxxxxxxxx'
@@ -64,55 +84,58 @@ AB_CLIENT_SECRET='xxxxxxxxxx'
 
 ## Usage
 
-### Getting credentials for pushing Extend App container images
+### Getting credentials to push an Extend App container image
 
-Use `dockerlogin` command to get the required credentials for pushing `Extend App` 
-container images to `Extend App` container registry. The credentials can be used only 
-for a specific game namespace and `Extend App`. For different game namespace and 
-`Extend App`, you will need to use this command again.
-
+Use `dockerlogin` command to get the required credentials to push an Extend App container image.
 
 ```shell
 extend-helper-cli dockerlogin --namespace <my-game-namespace> --app <my-extend-app> --login
 ```
 
-### Pushing an Extend App container image
+> :warning:  **The credentials can be used only for a specific game namespace and Extend App:** 
+For different game namespace and Extend App, you will need to use this command again.
 
-After `dockerlogin` command successfully, you can build your `Extend App`, 
-tag the image according to the repository URL, and push it. For example:
+The output of a successful login looks like the following.
 
 ```shell
-# Builds and pushes the image
+INFO[0000] signing in to https://dev.accelbyte.io 
+INFO[0001] getting docker credentials...                
+WARNING! Your password will be stored unencrypted in /home/xyz-abc/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
+
+### Pushing an Extend App container image
+
+To build your Extend App container image, tag it, and push it to the Extend App container registry, use `image-upload` command.
+
+```shell
 extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-app>
     --image-tag v1.0.0
     --work-dir <path-to-directory-containing-service-dockerfile>
 ```
 
-> :bulb: You can also use the `--login` flag to execute `dockerlogin` beforehand.
+> :bulb: You can also use the `--login` flag to automatically execute `dockerlogin` beforehand
+so that you do not have to execute it separately.
 
 ```shell
-# Uses `dockerlogin --namespace <my-game-namespace> --app <my-extend-app> --login` and then; builds and pushes the image
 extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-app>
     --image-tag v1.0.0
     --work-dir <path-to-directory-containing-service-dockerfile>
     --login
 ```
 
-or you could build and push it manually:
+### Getting an Extend App information
 
-```shell
-# Build new image
-docker build -t xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0 .
-
-# Push the image
-docker push xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com/accelbyte/justice/development/extend/<my-game-namespace>/<my-extend-app>:v1.0.0
-```
-
-### Getting App Info
+Use `get-app-info` command to get a specific Extend App information.
 
 ```shell
 extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app>
 ```
+
+The output will look like the following.
 
 ```text
 {
@@ -129,42 +152,55 @@ extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-
 }
 ```
 
-If you want to only query a specific field use `--path` and pass in a valid [JSON pointer](https://datatracker.ietf.org/doc/html/rfc6901).
+If you only need to query a specific field, use `--path` and pass in a valid [JSON pointer](https://datatracker.ietf.org/doc/html/rfc6901).
+
+For example, to get the `appName` only:
 
 ```shell
 extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appName
 ```
 
-```text
-<my-extend-app>
-```
-
----
+Another example, to get `appRepoUrl` only:
 
 ```shell
 extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appRepoUrl
-```
-
-```text
-xxxx.xxxx.xxxx.xxxxxxxxx.xxxx.xxxx/xxxx/xxxx/xxxx/xxxx/xxx-xxxx-xxxx/xxxx
 ```
 
 ## Troubleshooting
 
 ### docker login: error storing credentials `The stub received bad data.`
 
-When pushing an Extend app container image to AGS, `extend-helper-cli dockerlogin ...` command returns the following error.
+When pushing an Extend app container image to AGS, `extend-helper-cli dockerlogin ...` command returns the following error:
 
 ```
 Error saving credentials: error storing credentials - err: exit status 1, out: `error storing credentials - err: exit status 1, out: `The stub received bad data.`
 ```
 
-This issue has something to do with the token size being larger than most credential managers can handle.
+This issue may be due to the token size being larger than most credential managers can handle. See [here](https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data) for more information.
 
-Depending on your operating system, a possible workaround is to delete either `"credsStore": "desktop"` or `"credsStore": "desktop.exe"` from your Docker `config.json`.
+The workaround for this issue depends on your operating system.
 
-    - Linux or WSL2: $HOME/.docker\config.json
-    - Windows: %USERPROFILE%\.docker\config.json
+For Linux:
 
+1. Remove `"credsStore": "desktop.exe"` from `$HOME/.docker\config.json`.
 
-More disscussions [here](https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data).
+2. Try `extend-helper-cli dockerlogin ...` command again.
+
+For Windows (WSL2):
+
+1. In Windows file system:
+
+   - Remove `"credsStore": "desktop.exe"` from `$HOME/.docker\config.json`.
+
+2. In WSL2 file system:
+
+   - Remove `"credsStore": "desktop.exe"` from  `%USERPROFILE%\.docker\config.json`.
+   - Rename the following files in `C:\Program Files\Docker\Docker\resources\bin`.
+     - `docker-credential-desktop.exe` to `docker-credential-desktop.exe.old`
+     - `docker-credential-wincred.exe` to `docker-credential-wincred.exe.old`
+
+3. Try `extend-helper-cli dockerlogin ...` command again.
+
+> :warning: You may need to periodically apply this workaround. Docker may restore `"credsStore": "desktop"` in the `config.json` file when it is restarted. 
+See the discussion [here](https://github.com/docker/for-win/issues/9843#issuecomment-2173724429) for more information.
+
