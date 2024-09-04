@@ -10,8 +10,7 @@ A command line app for supporting AccelByte Gaming Services (AGS) Extend use cas
 
 Latest builds can be downloaded from [releases](https://github.com/AccelByte/extend-helper-cli/releases) page.
 
-> :warning: **We recommend to always use the latest version available:** For new projects, please avoid using
-v0.0.3 and below.
+> :warning: **We recommend to always use the latest version available:** For new projects, please avoid using v0.0.3 and below.
 
 ## Prerequisites
 
@@ -37,8 +36,8 @@ v0.0.3 and below.
 
 2.  Access to AGS environment. Keep the `Base URL`.
 
-    - Example for AGS Starter: `https://spaceshooter.prod.gamingservices.accelbyte.io`
-    - Example for AGS Premium: `https://dev.customer.accelbyte.io`
+    - Example for AGS Shared Cloud: `https://spaceshooter.prod.gamingservices.accelbyte.io`
+    - Example for AGS Private Cloud: `https://dev.customer.accelbyte.io`
 
 3. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.
 
@@ -84,6 +83,52 @@ AB_CLIENT_SECRET='xxxxxxxxxx'
 
 ## Usage
 
+### Creating an Extend App
+
+Use `create-app` command to create an Extend App.
+
+```shell
+extend-helper-cli create-app --namespace <my-game-namespace> --app <my-extend-app> --scenario service-extension --confirm
+```
+
+The output will look like the following.
+
+```text
+{
+  "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "appName": "<my-extend-app>",
+  "appRepoArn": "",
+  "appRepoUrl": "",
+  "basePath": "xxx-xxxx-xxxx",
+  "CPU": {
+    "cpuLimit": 1550,
+    "requestCPU": 1000
+  },
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "deletedAt": "",
+  "deploymentCreatedAt": "",
+  "deploymentId": "",
+  "deploymentImageTag": "",
+  "memory": {
+    "memoryLimit": 3300,
+    "requestMemory": 350
+  },
+  "message": "",
+  "replica": {
+    "maxReplica": 10,
+    "minReplica": 1,
+    "replicaLimit": 60
+  },
+  "scenario": "service-extension",
+  "servicePublicURL": "https://xxxx.accelbyte.io/xxx-xxxx-xxxx",
+  "serviceURL": "",
+  "updatedAt": "2024-01-31T00:00:00.000Z"
+}
+```
+
+> :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
+to wait for the app to be ready for image upload/deployment.
+
 ### Getting credentials to push an Extend App container image
 
 Use `dockerlogin` command to get the required credentials to push an Extend App container image.
@@ -92,7 +137,7 @@ Use `dockerlogin` command to get the required credentials to push an Extend App 
 extend-helper-cli dockerlogin --namespace <my-game-namespace> --app <my-extend-app> --login
 ```
 
-> :warning:  **The credentials can be used only for a specific game namespace and Extend App:** 
+> :warning: **The credentials can be used only for a specific game namespace and Extend App:** 
 For different game namespace and Extend App, you will need to use this command again.
 
 The output of a successful login looks like the following.
@@ -165,6 +210,65 @@ Another example, to get `appRepoUrl` only:
 ```shell
 extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appRepoUrl
 ```
+
+### Deploying an Extend App
+
+Use `deploy-app` command to create a deployment for an Extend App.
+
+```shell
+extend-helper-cli deploy-app --namespace <my-game-namespace> --app <my-extend-app> --image-tag v1.0.0
+```
+
+The output will look like the following.
+
+```text
+{
+  "deploymentId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+
+> :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
+to wait for the app to finish deployment.
+
+### Starting/Stopping an Extend App
+
+Use the `start-app` or `stop-app` command to start or stop an Extend App.
+
+```shell
+extend-helper-cli start-app --namespace <my-game-namespace> --app <my-extend-app>
+```
+
+```shell
+extend-helper-cli stop-app --namespace <my-game-namespace> --app <my-extend-app>
+```
+
+> :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
+to wait for the app to be fully started/stopped.
+
+### Creating/Updating Extend App Variables/Secrets
+
+Use the `update-var` or `update-secret` command to create new or modify existing Extend App variables or secrets.
+
+```shell
+extend-helper-cli update-var --namespace <my-game-namespace> --app <my-extend-app> --key REQUEST_TIMEOUT --value 100
+```
+
+```shell
+extend-helper-cli update-secret --namespace <my-game-namespace> --app <my-extend-app> --key API_KEY --value <api-key>
+```
+
+> :bulb: You can also add `--force` to force the command to create the variable or secret if it does not exist yet.
+
+### Deleting an Extend App
+
+Use `delete-app` command to delete an Extend App.
+
+```shell
+extend-helper-cli delete-app --namespace <my-game-namespace> --app <my-extend-app> --confirm
+```
+
+> :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
+to wait for the app to be fully deleted.
 
 ## Troubleshooting
 
