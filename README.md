@@ -41,7 +41,11 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
 
 3. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.
 
-   - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS` [READ]
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:APP [CREATE, READ, UPDATE, DELETE]`
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:DEPLOYMENT [CREATE]`
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS [READ]`
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:SECRET [CREATE, READ, UPDATE]`
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:VARIABLE [CREATE, READ, UPDATE]`
 
 ## Setup
 
@@ -170,6 +174,16 @@ extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-
     --image-tag v1.0.0
     --work-dir <path-to-directory-containing-service-dockerfile>
     --login
+```
+
+> :bulb: You can also add `--retry-limit` (and `--retry-interval <duration-in-seconds:1.0>`, `--retry-rate <duration-in-seconds:2.0>`)
+to tell the CLI to retry the upload whenever it fails.
+
+```shell
+extend-helper-cli image-upload --namespace <my-game-namespace> --app <my-extend-app>
+    --image-tag v1.0.0
+    --work-dir <path-to-directory-containing-service-dockerfile>
+    --retry-limit 3
 ```
 
 ### Getting an Extend App information
