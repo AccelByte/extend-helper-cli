@@ -273,6 +273,30 @@ extend-helper-cli update-secret --namespace <my-game-namespace> --app <my-extend
 
 > :bulb: You can also add `--force` to force the command to create the variable or secret if it does not exist yet.
 
+### Creating a Tunnel to Access NoSQL Databases
+
+Use the `tunnel` command to create a secure tunnel to access the databases through a local port.
+
+```shell
+extend-helper-cli tunnel --resource-name <resource-name> --local-port <local-port> --namespace <my-game-namespace>
+```
+
+Or use the short form:
+
+```shell
+extend-helper-cli tunnel -r <resource-name> -p <local-port> -n <my-game-namespace>
+```
+
+For example, to tunnel to a DocumentDB cluster created for your Extend App:
+
+```shell
+extend-helper-cli tunnel -r extend-nosql-accelbyte-development -p 27019 -n my-game-namespace
+```
+
+You can find the `<resource-name>` in the Admin Portal's Extend Service Extension page. Open the detail of your Extend app, click the `NoSQL Database` tab, and find the information under the `Database URL` field.
+
+The tunnel will listen on the specified local port and forward connections to the remote resource. You can then connect your database client to `localhost:<local-port>`.
+
 ### Deleting an Extend App
 
 Use `delete-app` command to delete an Extend App.
