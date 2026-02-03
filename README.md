@@ -39,13 +39,21 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
     - Example for AGS Shared Cloud: `https://spaceshooter.prod.gamingservices.accelbyte.io`
     - Example for AGS Private Cloud: `https://dev.customer.accelbyte.io`
 
-3. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.
-
+3. [Create an OAuth Client](https://docs.accelbyte.io/guides/access/iam-client.html) with `confidential` client type with the following permission. Keep the `Client ID` and `Client Secret`.  
+  
+    For AGS Private Cloud customers:
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:APP [CREATE, READ, UPDATE, DELETE]`
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:DEPLOYMENT [CREATE]`
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS [READ]`
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:SECRET [CREATE, READ, UPDATE]`
-   - `ADMIN:NAMESPACE:{namespace}:EXTEND:VARIABLE [CREATE, READ, UPDATE]`
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:VARIABLE [CREATE, READ, UPDATE]`  
+  
+    For AGS Shared Cloud customers:
+   - Extend > App Management (Read, Create, Update, Delete)
+   - Extend > Deployment Management (Create)
+   - Extend > Extend app image repository access (Read)
+   - Extend > Configuration Secret Management (Read, Create, Update)
+   - Extend > Configuration Variable Management (Read, Create, Update)
 
 ## Setup
 
