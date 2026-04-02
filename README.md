@@ -47,6 +47,7 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:REPOCREDENTIALS [READ]`
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:SECRET [CREATE, READ, UPDATE]`
    - `ADMIN:NAMESPACE:{namespace}:EXTEND:VARIABLE [CREATE, READ, UPDATE]`  
+   - `ADMIN:NAMESPACE:{namespace}:EXTEND:TUNNEL [READ]`
   
     For AGS Shared Cloud customers:
    - Extend > App Management (Read, Create, Update, Delete)
@@ -54,6 +55,7 @@ Latest builds can be downloaded from [releases](https://github.com/AccelByte/ext
    - Extend > Extend app image repository access (Read)
    - Extend > Configuration Secret Management (Read, Create, Update)
    - Extend > Configuration Variable Management (Read, Create, Update)
+   - Extend > TCP Tunneling (Read)
 
 ## Setup
 
