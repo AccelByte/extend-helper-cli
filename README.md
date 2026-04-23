@@ -318,6 +318,53 @@ extend-helper-cli delete-app --namespace <my-game-namespace> --app <my-extend-ap
 > :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
 to wait for the app to be fully deleted.
 
+### Machine-readable output (JSON mode)
+
+Add `--output json` to any supported command to receive a single JSON object on stdout instead of human-readable text. All log lines are redirected to stderr, so stdout contains only the JSON envelope and can be piped directly into tools like `jq`, or redirected to a file.
+
+```shell
+extend-helper-cli create-app --namespace <my-game-namespace> --app <my-extend-app> \
+    --scenario service-extension --output json
+```
+
+The envelope always contains `command` and `result`. When the command contacted a server, `serverResponse` holds the raw HTTP status and response body for each backend called (`csm` and/or `iam`).
+
+```json
+{
+  "command": "create-app",
+  "result": "success",
+  "serverResponse": {
+    "csm": {
+      "httpStatus": 200,
+      "response": { ... }
+    }
+  }
+}
+```
+
+On failure, `result` contains the error message and the process exits with code 1:
+
+```json
+{
+  "command": "create-app",
+  "result": "error: app already exists",
+  "serverResponse": {
+    "csm": {
+      "httpStatus": 409,
+      "response": { ... }
+    }
+  }
+}
+```
+
+For commands with no server calls (e.g. `status`, `clone-template`), `serverResponse` is omitted.
+
+**Supported commands:** `create-app`, `deploy-app`, `start-app`, `stop-app`, `delete-app`, `get-app-info`, `update-var`, `update-secret`, `clone-template`, `login`, `logout`, `status`.
+
+> :warning: `--output json` is **not supported** on `dockerlogin`, `image-upload`, and `tunnel` because their output is inherently streaming. Passing the flag on these commands prints a warning to stderr and the command runs normally.
+
+> :bulb: When `--output json` is set and the command would normally show an interactive confirmation prompt (e.g. `create-app` or `delete-app` without `--confirm`), the prompt is skipped and the command proceeds automatically. Always use `--output json` in non-interactive environments such as CI/CD pipelines.
+
 ## Troubleshooting
 
 ### docker login: error storing credentials `The stub received bad data.`
