@@ -143,12 +143,12 @@ The output will look like the following.
 > :bulb: You can also add `--wait` (and `--wait-interval <duration-in-seconds:10>`, `--wait-limit <duration-in-seconds:300>`)
 to wait for the app to be ready for image upload/deployment.
 
-### Getting credentials to push an Extend App container image
+### Logging in to push an Extend App container image
 
-Use `dockerlogin` command to get the required credentials to push an Extend App container image.
+Use `dockerlogin` command to authenticate Docker with the Extend App container registry. It runs `docker login` for you using credentials scoped to the given game namespace and Extend App.
 
 ```shell
-extend-helper-cli dockerlogin --namespace <my-game-namespace> --app <my-extend-app> --login
+extend-helper-cli dockerlogin --namespace <my-game-namespace> --app <my-extend-app>
 ```
 
 > :warning: **The credentials can be used only for a specific game namespace and Extend App:** 
@@ -165,6 +165,8 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 ```
+
+> :bulb: To print the credentials instead of logging in (for example, to use them in a script), use `--print` (JSON) or `--print --format=token` (raw password only).
 
 ### Pushing an Extend App container image
 
