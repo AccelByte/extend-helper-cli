@@ -237,6 +237,51 @@ Another example, to get `appRepoUrl` only:
 extend-helper-cli get-app-info --namespace <my-game-namespace> --app <my-extend-app> --path /appRepoUrl
 ```
 
+### Listing Extend App container images
+
+Use `list-images` command to list the container images that have been pushed for an Extend App.
+
+```shell
+extend-helper-cli list-images --namespace <my-game-namespace> --app <my-extend-app>
+```
+
+The output will look like the following.
+
+```text
+{
+  "data": [
+    {
+      "IsActive": true,
+      "imageDigest": "sha256:xxxxxxxxxxxxxxxx",
+      "imageTag": "v1.0.0",
+      "size": 12345678,
+      "updatedAt": "2024-01-31T00:00:00.000Z"
+    }
+  ],
+  "vulnerabilityStatus": "OK"
+}
+```
+
+> :bulb: By default the cached image list is returned. Pass `--cached=false` to force a fresh listing.
+
+> :information_source: This command requires the `ADMIN:NAMESPACE:{namespace}:EXTEND:IMAGE [READ]` permission on your OAuth client.
+
+To extract only what you need (for example, in a script), add `--output json` and pipe stdout into [`jq`](https://jqlang.github.io/jq/). The API response is passed through verbatim under `.serverResponse.csm.response`.
+
+For example, to list all image tags:
+
+```shell
+extend-helper-cli list-images --namespace <my-game-namespace> --app <my-extend-app> --output json \
+  | jq -r '.serverResponse.csm.response.data[].imageTag'
+```
+
+To check whether a specific image tag already exists — for example, in a CI/CD pipeline before building and pushing. Pass `--cached=false` for a definitive answer (the cached list may not yet reflect a just-pushed tag), and use `jq -e` so the exit code reflects the result (`0` if the tag exists, `1` if not):
+
+```shell
+extend-helper-cli list-images --namespace <my-game-namespace> --app <my-extend-app> --cached=false --output json \
+  | jq -e '.serverResponse.csm.response.data | any(.imageTag == "v1.0.0")'
+```
+
 ### Deploying an Extend App
 
 Use `deploy-app` command to create a deployment for an Extend App.
@@ -361,7 +406,7 @@ On failure, `result` contains the error message and the process exits with code 
 
 For commands with no server calls (e.g. `status`, `clone-template`), `serverResponse` is omitted.
 
-**Supported commands:** `create-app`, `deploy-app`, `start-app`, `stop-app`, `delete-app`, `get-app-info`, `update-var`, `update-secret`, `clone-template`, `login`, `logout`, `status`.
+**Supported commands:** `create-app`, `deploy-app`, `start-app`, `stop-app`, `delete-app`, `get-app-info`, `list-images`, `update-var`, `update-secret`, `clone-template`, `login`, `logout`, `status`.
 
 > :warning: `--output json` is **not supported** on `dockerlogin`, `image-upload`, and `tunnel` because their output is inherently streaming. Passing the flag on these commands prints a warning to stderr and the command runs normally.
 
