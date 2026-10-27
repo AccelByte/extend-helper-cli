@@ -1,5 +1,7 @@
 # extend-helper-cli
 
+> ⚠️ **Deprecated:** This repository is no longer maintained. Extend Helper CLI is deprecated in favor of [AGS CLI](https://docs.accelbyte.io/gaming-services/modules/developer-tools/ags-cli/), which unifies CLI tooling across AGS, AMS, and Extend. New features will only be released in AGS CLI. Support ends Dec 31, 2026. See the [migration guide](https://docs.accelbyte.io/gaming-services/modules/developer-tools/ags-cli/migration/from-extend-helper-cli/).
+
 ## Overview
 
 A command line app for supporting AccelByte Gaming Services (AGS) Extend use cases.
